@@ -29,9 +29,30 @@ function EventPill({ info }: { info: EventContentArg }) {
     delivery: '🚚',
     unavailable: '✕',
   }
+  const isTimeGrid = info.view.type.startsWith('timeGrid')
+
+  if (isTimeGrid) {
+    return (
+      <div className="px-1.5 py-0.5 w-full overflow-hidden">
+        {info.timeText && (
+          <p className="text-[10px] leading-tight font-semibold opacity-90 truncate">
+            {info.timeText}
+          </p>
+        )}
+        <div className="flex items-center gap-1 truncate mt-0.5">
+          <span className="text-xs leading-none flex-shrink-0">{icons[type] ?? '•'}</span>
+          <span className="text-xs font-medium truncate">{info.event.title}</span>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="flex items-center gap-1 px-1 truncate">
       <span className="text-xs leading-none">{icons[type] ?? '•'}</span>
+      {info.timeText && !info.event.allDay && (
+        <span className="text-[10px] opacity-80 flex-shrink-0">{info.timeText}</span>
+      )}
       <span className="text-xs font-medium truncate">{info.event.title}</span>
     </div>
   )
