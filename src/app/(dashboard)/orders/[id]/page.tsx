@@ -161,7 +161,7 @@ export default async function OrderDetailPage({
           </div>
           {prepEvents && prepEvents.length > 0 ? (
             <div className="space-y-2">
-              {prepEvents.map((event) => {
+              {prepEvents.map((event: { id: string; start_time: string; end_time: string; notes: string | null }) => {
                 const start = new Date(event.start_time)
                 const end = new Date(event.end_time)
                 const durationMins = Math.round((end.getTime() - start.getTime()) / 60000)
