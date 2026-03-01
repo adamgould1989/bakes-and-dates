@@ -1,9 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "WebFetch(domain:www.lalasbakesandcakes.com)",
-      "Bash(node:*)",
-      "Bash(npx:*)"
-    ]
-  }
-}
