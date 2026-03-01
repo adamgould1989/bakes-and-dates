@@ -12,6 +12,7 @@ const prepBlockSchema = z.object({
   startTime: z.string().min(1),
   durationHours: z.coerce.number().min(0),
   durationMinutes: z.coerce.number().min(0).max(59),
+  label: z.string().optional(),
 })
 
 const orderItemSchema = z.object({
@@ -56,7 +57,8 @@ export async function createOrder(formData: unknown): Promise<ActionResult> {
   // Build prep blocks with ISO timestamps
   const prepBlocksForRpc = d.prepBlocks.map((block) => {
     const { start, end } = prepBlockToCalendarTimes(block)
-    return { start_time: start, end_time: end, notes: null }
+    const label = block.label?.trim() || null
+    return { start_time: start, end_time: end, label, notes: label }
   })
 
   // Build order items for RPC
@@ -108,6 +110,60 @@ export async function deleteOrder(id: string): Promise<ActionResult> {
   if (error) return { success: false, error: error.message }
 
   revalidatePath('/orders')
+  revalidatePath('/calendar')
+  return { success: true }
+}
+
+export async function updatePrepSchedule(
+  orderId: string,
+  prepBlocks: unknown[],
+): Promise<ActionResult> {
+  const parsed = z.array(prepBlockSchema).safeParse(prepBlocks)
+  if (!parsed.success) {
+    const firstError = parsed.error.errors[0]
+    return { success: false, error: firstError.message }
+  }
+
+  const supabase = db()
+
+  // Get customer name for event titles
+  const { data: order } = await supabase
+    .from('orders')
+    .select('customers(name)')
+    .eq('id', orderId)
+    .single()
+
+  if (!order) return { success: false, error: 'Order not found' }
+  const customerName = (order as { customers: { name: string } }).customers.name
+
+  // Replace prep events atomically: delete then insert
+  const { error: deleteError } = await supabase
+    .from('calendar_events')
+    .delete()
+    .eq('order_id', orderId)
+    .eq('event_type', 'prep')
+
+  if (deleteError) return { success: false, error: deleteError.message }
+
+  if (parsed.data.length > 0) {
+    const newEvents = parsed.data.map((block) => {
+      const { start, end } = prepBlockToCalendarTimes(block)
+      const label = block.label?.trim() || null
+      return {
+        title: label ?? `Prep: ${customerName}`,
+        event_type: 'prep' as const,
+        start_time: start,
+        end_time: end,
+        order_id: orderId,
+        notes: label,
+      }
+    })
+
+    const { error: insertError } = await supabase.from('calendar_events').insert(newEvents)
+    if (insertError) return { success: false, error: insertError.message }
+  }
+
+  revalidatePath(`/orders/${orderId}`)
   revalidatePath('/calendar')
   return { success: true }
 }

@@ -39,6 +39,7 @@ export interface PrepBlock {
   startTime: string
   durationHours: number
   durationMinutes: number
+  label?: string
 }
 
 export interface OrderFormValues {

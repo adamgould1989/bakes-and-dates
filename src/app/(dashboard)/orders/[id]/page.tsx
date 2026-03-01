@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
-import { ChevronLeft, Calendar, Truck, Clock, Pencil } from 'lucide-react'
+import { ChevronLeft, Calendar, Truck, Clock, Pencil, CalendarClock } from 'lucide-react'
 import { db } from '@/lib/supabase/db'
 import { Header } from '@/components/layout/Header'
 import { Button } from '@/components/ui/button'
@@ -17,11 +17,21 @@ export default async function OrderDetailPage({
 }: {
   params: { id: string }
 }) {
-  const { data: order } = await db()
-    .from('orders')
-    .select('*, customers(*), order_items(*, menu_items(*))')
-    .eq('id', params.id)
-    .single()
+  const supabase = db()
+
+  const [{ data: order }, { data: prepEvents }] = await Promise.all([
+    supabase
+      .from('orders')
+      .select('*, customers(*), order_items(*, menu_items(*))')
+      .eq('id', params.id)
+      .single(),
+    supabase
+      .from('calendar_events')
+      .select('id, start_time, end_time, notes')
+      .eq('order_id', params.id)
+      .eq('event_type', 'prep')
+      .order('start_time'),
+  ])
 
   if (!order) notFound()
 
@@ -32,12 +42,20 @@ export default async function OrderDetailPage({
       <Header
         title="Order Detail"
         action={
-          <Link href={`/orders/${params.id}/edit`}>
-            <Button variant="outline" size="sm">
-              <Pencil className="w-4 h-4 mr-1" />
-              Edit
-            </Button>
-          </Link>
+          <div className="flex gap-2">
+            <Link href={`/orders/${params.id}/prep`}>
+              <Button variant="outline" size="sm">
+                <CalendarClock className="w-4 h-4 mr-1" />
+                Prep
+              </Button>
+            </Link>
+            <Link href={`/orders/${params.id}/edit`}>
+              <Button variant="outline" size="sm">
+                <Pencil className="w-4 h-4 mr-1" />
+                Edit
+              </Button>
+            </Link>
+          </div>
         }
       />
 
@@ -126,6 +144,50 @@ export default async function OrderDetailPage({
               </Card>
             ))}
           </div>
+        </div>
+
+        {/* Prep Schedule */}
+        <div>
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="text-sm font-semibold text-white/50 uppercase tracking-wider">
+              Prep Schedule
+            </h2>
+            <Link href={`/orders/${params.id}/prep`}>
+              <Button variant="outline" size="sm">
+                <CalendarClock className="w-3.5 h-3.5 mr-1" />
+                Amend
+              </Button>
+            </Link>
+          </div>
+          {prepEvents && prepEvents.length > 0 ? (
+            <div className="space-y-2">
+              {prepEvents.map((event) => {
+                const start = new Date(event.start_time)
+                const end = new Date(event.end_time)
+                const durationMins = Math.round((end.getTime() - start.getTime()) / 60000)
+                return (
+                  <Card key={event.id}>
+                    <CardContent className="p-3">
+                      {event.notes && (
+                        <p className="font-medium text-white text-sm">{event.notes}</p>
+                      )}
+                      <p className="text-white/50 text-xs mt-0.5">
+                        {formatDate(event.start_time)} &middot;{' '}
+                        {start.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                        {' '}–{' '}
+                        {end.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                        {' '}·{' '}{formatDuration(durationMins)}
+                      </p>
+                    </CardContent>
+                  </Card>
+                )
+              })}
+            </div>
+          ) : (
+            <p className="text-white/30 text-sm text-center py-4 border border-dashed border-white/10 rounded-lg">
+              No prep blocks scheduled yet
+            </p>
+          )}
         </div>
 
         {/* Danger zone */}
