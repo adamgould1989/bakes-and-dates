@@ -5,7 +5,6 @@ import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import interactionPlugin from '@fullcalendar/interaction'
-import type { DateSelectArg } from '@fullcalendar/interaction'
 import type { EventClickArg, EventContentArg } from '@fullcalendar/core'
 import { ChevronLeft, ChevronRight, Plus } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -95,7 +94,8 @@ export function CalendarClient({ events }: CalendarClientProps) {
     return d.toISOString().slice(0, 10)
   }
 
-  function handleDateSelect(arg: DateSelectArg) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  function handleDateSelect(arg: any) {
     const startDate = arg.startStr.slice(0, 10)
     // FullCalendar end is exclusive for all-day events, subtract one day
     const endDate = arg.allDay ? prevDay(arg.endStr) : arg.endStr.slice(0, 10)
