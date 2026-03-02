@@ -5,7 +5,7 @@ import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import interactionPlugin from '@fullcalendar/interaction'
-import type { DateClickArg } from '@fullcalendar/interaction'
+import type { DateSelectArg } from '@fullcalendar/interaction'
 import type { EventClickArg, EventContentArg } from '@fullcalendar/core'
 import { ChevronLeft, ChevronRight, Plus } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -64,6 +64,7 @@ export function CalendarClient({ events }: CalendarClientProps) {
   const [title, setTitle] = useState('')
   const [unavailModal, setUnavailModal] = useState(false)
   const [selectedDate, setSelectedDate] = useState<string | undefined>()
+  const [selectedEndDate, setSelectedEndDate] = useState<string | undefined>()
   const [selectedEvent, setSelectedEvent] = useState<CalendarEventView | null>(null)
 
   const updateTitle = useCallback(() => {
@@ -88,8 +89,18 @@ export function CalendarClient({ events }: CalendarClientProps) {
     updateTitle()
   }
 
-  function handleDateClick(arg: DateClickArg) {
-    setSelectedDate(arg.dateStr)
+  function prevDay(dateStr: string): string {
+    const d = new Date(dateStr)
+    d.setUTCDate(d.getUTCDate() - 1)
+    return d.toISOString().slice(0, 10)
+  }
+
+  function handleDateSelect(arg: DateSelectArg) {
+    const startDate = arg.startStr.slice(0, 10)
+    // FullCalendar end is exclusive for all-day events, subtract one day
+    const endDate = arg.allDay ? prevDay(arg.endStr) : arg.endStr.slice(0, 10)
+    setSelectedDate(startDate)
+    setSelectedEndDate(endDate)
     setUnavailModal(true)
   }
 
@@ -154,7 +165,7 @@ export function CalendarClient({ events }: CalendarClientProps) {
             ))}
           </div>
 
-          <Button size="sm" onClick={() => { setSelectedDate(undefined); setUnavailModal(true) }}>
+          <Button size="sm" onClick={() => { setSelectedDate(undefined); setSelectedEndDate(undefined); setUnavailModal(true) }}>
             <Plus className="w-4 h-4 mr-1" />
             Block
           </Button>
@@ -169,7 +180,9 @@ export function CalendarClient({ events }: CalendarClientProps) {
           initialView="dayGridMonth"
           headerToolbar={false}
           events={events}
-          dateClick={handleDateClick}
+          selectable={true}
+          selectMirror={true}
+          select={handleDateSelect}
           eventClick={handleEventClick}
           eventContent={(info) => <EventPill info={info} />}
           height="auto"
@@ -192,6 +205,7 @@ export function CalendarClient({ events }: CalendarClientProps) {
         open={unavailModal}
         onClose={() => setUnavailModal(false)}
         defaultDate={selectedDate}
+        defaultEndDate={selectedEndDate}
       />
       <EventPopover event={selectedEvent} onClose={() => setSelectedEvent(null)} />
     </div>
