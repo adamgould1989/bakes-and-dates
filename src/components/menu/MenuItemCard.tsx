@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { Clock, Pencil, Trash2, MoreVertical } from 'lucide-react'
+import Link from 'next/link'
 import { toast } from 'sonner'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -19,10 +20,9 @@ import type { MenuItem } from '@/types/app'
 
 interface MenuItemCardProps {
   item: MenuItem
-  onEdit: (item: MenuItem) => void
 }
 
-export function MenuItemCard({ item, onEdit }: MenuItemCardProps) {
+export function MenuItemCard({ item }: MenuItemCardProps) {
   const [deleting, setDeleting] = useState(false)
 
   async function handleDelete() {
@@ -76,9 +76,11 @@ export function MenuItemCard({ item, onEdit }: MenuItemCardProps) {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={() => onEdit(item)}>
-                <Pencil className="w-4 h-4 mr-2" />
-                Edit
+              <DropdownMenuItem asChild>
+                <Link href={`/menu/${item.id}/edit`}>
+                  <Pencil className="w-4 h-4 mr-2" />
+                  Edit
+                </Link>
               </DropdownMenuItem>
               <DropdownMenuItem onClick={handleToggleActive}>
                 {item.is_active ? 'Deactivate' : 'Activate'}
