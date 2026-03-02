@@ -1,11 +1,8 @@
-'use client'
-
-import { useState } from 'react'
+import Link from 'next/link'
 import { Plus, UtensilsCrossed } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Header } from '@/components/layout/Header'
 import { MenuItemCard } from '@/components/menu/MenuItemCard'
-import { MenuItemModal } from '@/components/menu/MenuItemModal'
 import type { MenuItem } from '@/types/app'
 
 interface MenuPageClientProps {
@@ -13,19 +10,6 @@ interface MenuPageClientProps {
 }
 
 export function MenuPageClient({ menuItems }: MenuPageClientProps) {
-  const [modalOpen, setModalOpen] = useState(false)
-  const [editItem, setEditItem] = useState<MenuItem | null>(null)
-
-  function openCreate() {
-    setEditItem(null)
-    setModalOpen(true)
-  }
-
-  function openEdit(item: MenuItem) {
-    setEditItem(item)
-    setModalOpen(true)
-  }
-
   const grouped = menuItems.reduce<Record<string, MenuItem[]>>((acc, item) => {
     const key = item.category ?? 'Uncategorised'
     if (!acc[key]) acc[key] = []
@@ -38,9 +22,11 @@ export function MenuPageClient({ menuItems }: MenuPageClientProps) {
       <Header
         title="Menu"
         action={
-          <Button size="sm" onClick={openCreate}>
-            <Plus className="w-4 h-4 mr-1" />
-            Add Item
+          <Button size="sm" asChild>
+            <Link href="/menu/new">
+              <Plus className="w-4 h-4 mr-1" />
+              Add Item
+            </Link>
           </Button>
         }
       />
@@ -51,9 +37,11 @@ export function MenuPageClient({ menuItems }: MenuPageClientProps) {
             <UtensilsCrossed className="w-12 h-12 mx-auto mb-3 opacity-30" />
             <p className="font-medium">No menu items yet</p>
             <p className="text-sm mt-1">Add your first bake to get started</p>
-            <Button className="mt-4" onClick={openCreate}>
-              <Plus className="w-4 h-4 mr-1" />
-              Add Menu Item
+            <Button className="mt-4" asChild>
+              <Link href="/menu/new">
+                <Plus className="w-4 h-4 mr-1" />
+                Add Menu Item
+              </Link>
             </Button>
           </div>
         ) : (
@@ -64,19 +52,13 @@ export function MenuPageClient({ menuItems }: MenuPageClientProps) {
               </h2>
               <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
                 {items.map((item) => (
-                  <MenuItemCard key={item.id} item={item} onEdit={openEdit} />
+                  <MenuItemCard key={item.id} item={item} />
                 ))}
               </div>
             </div>
           ))
         )}
       </div>
-
-      <MenuItemModal
-        open={modalOpen}
-        onClose={() => setModalOpen(false)}
-        item={editItem}
-      />
     </>
   )
 }

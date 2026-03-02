@@ -2,6 +2,7 @@
 
 import { db } from '@/lib/supabase/db'
 import { revalidatePath } from 'next/cache'
+import { redirect } from 'next/navigation'
 import { z } from 'zod'
 import type { ActionResult, MenuItem } from '@/types/app'
 
@@ -28,7 +29,7 @@ export async function createMenuItem(formData: unknown): Promise<ActionResult> {
   if (error) return { success: false, error: error.message }
 
   revalidatePath('/menu')
-  return { success: true, id: data.id }
+  redirect('/menu')
 }
 
 export async function updateMenuItem(id: string, formData: unknown): Promise<ActionResult> {
