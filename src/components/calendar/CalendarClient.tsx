@@ -182,6 +182,7 @@ export function CalendarClient({ events }: CalendarClientProps) {
           events={events}
           selectable={true}
           selectMirror={true}
+          eventDisplay="block"
           select={handleDateSelect}
           eventClick={handleEventClick}
           eventContent={(info) => <EventPill info={info} />}
