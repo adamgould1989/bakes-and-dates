@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
@@ -19,11 +19,15 @@ import { createUnavailabilityBlock } from '@/actions/calendar'
 
 const schema = z.object({
   title: z.string().min(1).default('Unavailable'),
-  date: z.string().min(1, 'Date is required'),
+  startDate: z.string().min(1, 'Start date is required'),
+  endDate: z.string().min(1, 'End date is required'),
   startTime: z.string().optional(),
   endTime: z.string().optional(),
   isAllDay: z.boolean().default(true),
   notes: z.string().optional(),
+}).refine((data) => data.endDate >= data.startDate, {
+  message: 'End date must be on or after start date',
+  path: ['endDate'],
 })
 
 type FormValues = z.infer<typeof schema>
@@ -32,19 +36,35 @@ interface UnavailabilityModalProps {
   open: boolean
   onClose: () => void
   defaultDate?: string
+  defaultEndDate?: string
 }
 
-export function UnavailabilityModal({ open, onClose, defaultDate }: UnavailabilityModalProps) {
+export function UnavailabilityModal({ open, onClose, defaultDate, defaultEndDate }: UnavailabilityModalProps) {
   const [saving, setSaving] = useState(false)
 
-  const { register, handleSubmit, watch, formState: { errors } } = useForm<FormValues>({
+  const { register, handleSubmit, watch, reset, formState: { errors } } = useForm<FormValues>({
     resolver: zodResolver(schema),
     defaultValues: {
       title: 'Unavailable',
-      date: defaultDate ?? '',
+      startDate: defaultDate ?? '',
+      endDate: defaultEndDate ?? defaultDate ?? '',
       isAllDay: true,
     },
   })
+
+  useEffect(() => {
+    if (open) {
+      reset({
+        title: 'Unavailable',
+        startDate: defaultDate ?? '',
+        endDate: defaultEndDate ?? defaultDate ?? '',
+        isAllDay: true,
+        startTime: undefined,
+        endTime: undefined,
+        notes: undefined,
+      })
+    }
+  }, [open, defaultDate, defaultEndDate, reset])
 
   const isAllDay = watch('isAllDay')
 
@@ -55,11 +75,11 @@ export function UnavailabilityModal({ open, onClose, defaultDate }: Unavailabili
     let endTime: string
 
     if (values.isAllDay) {
-      startTime = new Date(values.date + 'T00:00:00').toISOString()
-      endTime = new Date(values.date + 'T23:59:59').toISOString()
+      startTime = new Date(values.startDate + 'T00:00:00').toISOString()
+      endTime = new Date(values.endDate + 'T23:59:59').toISOString()
     } else {
-      startTime = new Date(values.date + 'T' + (values.startTime || '09:00') + ':00').toISOString()
-      endTime = new Date(values.date + 'T' + (values.endTime || '17:00') + ':00').toISOString()
+      startTime = new Date(values.startDate + 'T' + (values.startTime || '09:00') + ':00').toISOString()
+      endTime = new Date(values.endDate + 'T' + (values.endTime || '17:00') + ':00').toISOString()
     }
 
     const result = await createUnavailabilityBlock({
@@ -92,10 +112,17 @@ export function UnavailabilityModal({ open, onClose, defaultDate }: Unavailabili
             <Input {...register('title')} placeholder="Unavailable" />
           </div>
 
-          <div className="space-y-1.5">
-            <Label>Date *</Label>
-            <Input type="date" {...register('date')} />
-            {errors.date && <p className="text-red-400 text-xs">{errors.date.message}</p>}
+          <div className="grid grid-cols-2 gap-3">
+            <div className="space-y-1.5">
+              <Label>Start date *</Label>
+              <Input type="date" {...register('startDate')} />
+              {errors.startDate && <p className="text-red-400 text-xs">{errors.startDate.message}</p>}
+            </div>
+            <div className="space-y-1.5">
+              <Label>End date *</Label>
+              <Input type="date" {...register('endDate')} />
+              {errors.endDate && <p className="text-red-400 text-xs">{errors.endDate.message}</p>}
+            </div>
           </div>
 
           <div className="flex items-center gap-2">
@@ -126,7 +153,7 @@ export function UnavailabilityModal({ open, onClose, defaultDate }: Unavailabili
               Cancel
             </Button>
             <Button type="submit" disabled={saving}>
-              {saving ? 'Saving…' : 'Block Day'}
+              {saving ? 'Saving…' : 'Block Dates'}
             </Button>
           </DialogFooter>
         </form>
