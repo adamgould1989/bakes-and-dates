@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
@@ -45,16 +45,24 @@ export function MenuItemModal({ open, onClose, item }: MenuItemModalProps) {
     formState: { errors },
   } = useForm<FormValues>({
     resolver: zodResolver(schema),
-    defaultValues: item
-      ? {
-          name: item.name,
-          description: item.description ?? '',
-          base_prep_time_minutes: item.base_prep_time_minutes,
-          category: item.category ?? '',
-          is_active: item.is_active,
-        }
-      : { is_active: true, base_prep_time_minutes: 0 },
+    defaultValues: { is_active: true, base_prep_time_minutes: 0 },
   })
+
+  useEffect(() => {
+    if (open) {
+      reset(
+        item
+          ? {
+              name: item.name,
+              description: item.description ?? '',
+              base_prep_time_minutes: item.base_prep_time_minutes,
+              category: item.category ?? '',
+              is_active: item.is_active,
+            }
+          : { name: '', description: '', category: '', is_active: true, base_prep_time_minutes: 0 }
+      )
+    }
+  }, [open, item, reset])
 
   async function onSubmit(values: FormValues) {
     setSaving(true)
