@@ -46,8 +46,6 @@ export function EditPrepForm({ orderId, totalPrepMinutes, prepEvents }: EditPrep
       status: 'pending',
       deadline: '',
       deliveryType: 'collection',
-      deliveryDate: '',
-      deliveryAddress: '',
       notes: '',
       orderItems: [],
     },

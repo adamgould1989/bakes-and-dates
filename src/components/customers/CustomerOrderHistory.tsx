@@ -38,9 +38,6 @@ export function CustomerOrderHistory({ orders }: CustomerOrderHistoryProps) {
                   <span className="text-white/50 text-xs capitalize">{order.delivery_type}</span>
                 </div>
                 <p className="text-white text-sm mt-1">Deadline: {formatDate(order.deadline)}</p>
-                {order.delivery_date && (
-                  <p className="text-white/60 text-xs">{order.delivery_type}: {formatDate(order.delivery_date)}</p>
-                )}
               </div>
               <ChevronRight className="w-4 h-4 text-white/30 shrink-0" />
             </CardContent>

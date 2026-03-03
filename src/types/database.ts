@@ -72,8 +72,6 @@ export interface Database {
           status: 'pending' | 'confirmed' | 'completed' | 'cancelled'
           deadline: string
           delivery_type: 'delivery' | 'collection'
-          delivery_date: string | null
-          delivery_address: string | null
           notes: string | null
           total_prep_minutes: number
         }
@@ -84,8 +82,6 @@ export interface Database {
           status?: 'pending' | 'confirmed' | 'completed' | 'cancelled'
           deadline: string
           delivery_type: 'delivery' | 'collection'
-          delivery_date?: string | null
-          delivery_address?: string | null
           notes?: string | null
           total_prep_minutes?: number
         }
@@ -96,8 +92,6 @@ export interface Database {
           status?: 'pending' | 'confirmed' | 'completed' | 'cancelled'
           deadline?: string
           delivery_type?: 'delivery' | 'collection'
-          delivery_date?: string | null
-          delivery_address?: string | null
           notes?: string | null
           total_prep_minutes?: number
         }
@@ -174,8 +168,6 @@ export interface Database {
           p_status: string
           p_deadline: string
           p_delivery_type: string
-          p_delivery_date: string | null
-          p_delivery_address: string | null
           p_notes: string | null
           p_total_prep_minutes: number
           p_order_items: Json

@@ -23,8 +23,6 @@ export function EditOrderForm({ order, customers, menuItems }: EditOrderFormProp
   const [status, setStatus] = useState(order.status)
   const [deadline, setDeadline] = useState(order.deadline)
   const [deliveryType, setDeliveryType] = useState(order.delivery_type)
-  const [deliveryDate, setDeliveryDate] = useState(order.delivery_date ?? '')
-  const [deliveryAddress, setDeliveryAddress] = useState(order.delivery_address ?? '')
   const [notes, setNotes] = useState(order.notes ?? '')
   const [customerId, setCustomerId] = useState(order.customer_id)
 
@@ -40,8 +38,6 @@ export function EditOrderForm({ order, customers, menuItems }: EditOrderFormProp
         status,
         deadline,
         delivery_type: deliveryType,
-        delivery_date: deliveryDate || null,
-        delivery_address: deliveryAddress || null,
         notes: notes || null,
       })
       .eq('id', order.id)
@@ -112,25 +108,6 @@ export function EditOrderForm({ order, customers, menuItems }: EditOrderFormProp
           </Select>
         </div>
 
-        <div className="space-y-1.5">
-          <Label>{deliveryType === 'delivery' ? 'Delivery Date' : 'Collection Date'}</Label>
-          <Input
-            type="date"
-            value={deliveryDate}
-            onChange={(e) => setDeliveryDate(e.target.value)}
-          />
-        </div>
-
-        {deliveryType === 'delivery' && (
-          <div className="space-y-1.5">
-            <Label>Delivery Address</Label>
-            <Input
-              value={deliveryAddress}
-              onChange={(e) => setDeliveryAddress(e.target.value)}
-              placeholder="Full address"
-            />
-          </div>
-        )}
       </div>
 
       <div className="space-y-1.5">

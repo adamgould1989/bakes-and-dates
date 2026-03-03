@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { ChevronRight, Calendar, Truck } from 'lucide-react'
+import { ChevronRight, Calendar } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
 import { OrderStatusBadge } from './OrderStatusBadge'
 import { formatDate } from '@/lib/utils/dates'
@@ -26,12 +26,7 @@ export function OrderCard({ order }: OrderCardProps) {
                   <Calendar className="w-3 h-3" />
                   Deadline: {formatDate(order.deadline)}
                 </span>
-                {order.delivery_date && (
-                  <span className="flex items-center gap-1 capitalize">
-                    <Truck className="w-3 h-3" />
-                    {order.delivery_type}: {formatDate(order.delivery_date)}
-                  </span>
-                )}
+                <span className="capitalize">{order.delivery_type}</span>
               </div>
             </div>
             <ChevronRight className="w-4 h-4 text-white/30 shrink-0" />

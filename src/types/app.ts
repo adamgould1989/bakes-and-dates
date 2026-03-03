@@ -47,8 +47,6 @@ export interface OrderFormValues {
   status: OrderStatus
   deadline: string
   deliveryType: DeliveryType
-  deliveryDate: string
-  deliveryAddress: string
   notes: string
   orderItems: {
     menuItemId: string

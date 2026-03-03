@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
-import { ChevronLeft, Calendar, Truck, Clock, Pencil, CalendarClock } from 'lucide-react'
+import { ChevronLeft, Calendar, Clock, Pencil, CalendarClock } from 'lucide-react'
 import { db } from '@/lib/supabase/db'
 import { Header } from '@/components/layout/Header'
 import { Button } from '@/components/ui/button'
@@ -94,18 +94,6 @@ export default async function OrderDetailPage({
                 <strong className="text-white">{formatDate(typedOrder.deadline)}</strong>
               </span>
             </div>
-            {typedOrder.delivery_date && (
-              <div className="flex items-center gap-2 text-white/70">
-                <Truck className="w-4 h-4 text-blue-400" />
-                <span className="capitalize">
-                  {typedOrder.delivery_type}:{' '}
-                  <strong className="text-white">{formatDate(typedOrder.delivery_date)}</strong>
-                </span>
-              </div>
-            )}
-            {typedOrder.delivery_address && (
-              <p className="text-white/50 text-xs pl-6">{typedOrder.delivery_address}</p>
-            )}
             <div className="flex items-center gap-2 text-white/70">
               <Clock className="w-4 h-4 text-purple-400" />
               <span>
