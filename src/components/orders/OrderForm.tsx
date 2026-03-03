@@ -37,8 +37,6 @@ const schema = z.object({
   status: z.enum(['pending', 'confirmed', 'completed', 'cancelled']).default('pending'),
   deadline: z.string().min(1, 'Deadline is required'),
   deliveryType: z.enum(['delivery', 'collection']),
-  deliveryDate: z.string().optional(),
-  deliveryAddress: z.string().optional(),
   notes: z.string().optional(),
   orderItems: z.array(orderItemSchema).min(1, 'Add at least one item'),
   prepBlocks: z.array(prepBlockSchema),
@@ -62,8 +60,6 @@ export function OrderForm({ customers, menuItems, defaultCustomerId }: OrderForm
       status: 'pending',
       deadline: '',
       deliveryType: 'collection',
-      deliveryDate: '',
-      deliveryAddress: '',
       notes: '',
       orderItems: [],
       prepBlocks: [],
@@ -179,17 +175,6 @@ export function OrderForm({ customers, menuItems, defaultCustomerId }: OrderForm
               </Select>
             </div>
 
-            <div className="space-y-1.5">
-              <Label>{deliveryType === 'delivery' ? 'Delivery Date' : 'Collection Date'}</Label>
-              <Input type="date" {...register('deliveryDate')} />
-            </div>
-
-            {deliveryType === 'delivery' && (
-              <div className="space-y-1.5">
-                <Label>Delivery Address</Label>
-                <Input {...register('deliveryAddress')} placeholder="Full delivery address" />
-              </div>
-            )}
           </div>
         </section>
 
