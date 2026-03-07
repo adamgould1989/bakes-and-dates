@@ -93,50 +93,49 @@ export function PrepTimePlanner({ totalPrepMinutes }: PrepTimePlannerProps) {
                 className="h-8 w-full rounded-md border border-white/20 bg-white/5 px-2.5 text-xs text-white placeholder:text-white/30 focus:outline-none focus:ring-1 focus:ring-brand-pink"
               />
 
-              {/* Date / time / duration / remove */}
-              <div className="grid grid-cols-[1fr_auto_auto_auto] gap-2 items-center">
-                {/* Date */}
-                <input
-                  type="date"
-                  {...register(`prepBlocks.${index}.date`)}
-                  className="h-9 w-full rounded-md border border-white/20 bg-brand-cream px-2 text-xs text-brand-bg focus:outline-none focus:ring-1 focus:ring-brand-pink"
-                />
-
-                {/* Start time */}
-                <input
-                  type="time"
-                  {...register(`prepBlocks.${index}.startTime`)}
-                  className="h-9 w-24 rounded-md border border-white/20 bg-brand-cream px-2 text-xs text-brand-bg focus:outline-none focus:ring-1 focus:ring-brand-pink"
-                />
-
-                {/* Duration */}
-                <div className="flex items-center gap-1">
-                  <select
-                    {...register(`prepBlocks.${index}.durationHours`, { valueAsNumber: true })}
-                    className="h-9 rounded-md border border-white/20 bg-brand-cream px-1.5 text-xs text-brand-bg focus:outline-none focus:ring-1 focus:ring-brand-pink"
+              {/* Date / time / duration / remove — stacked on mobile */}
+              <div className="space-y-2">
+                {/* Row 1: date + remove */}
+                <div className="flex gap-2 items-center">
+                  <input
+                    type="date"
+                    {...register(`prepBlocks.${index}.date`)}
+                    className="h-9 flex-1 rounded-md border border-white/20 bg-brand-cream px-2 text-xs text-brand-bg focus:outline-none focus:ring-1 focus:ring-brand-pink"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => remove(index)}
+                    className="p-1.5 rounded hover:bg-white/10 text-white/40 hover:text-white transition-colors shrink-0"
                   >
-                    {HOURS.map((h) => (
-                      <option key={h} value={h}>{h}h</option>
-                    ))}
-                  </select>
-                  <select
-                    {...register(`prepBlocks.${index}.durationMinutes`, { valueAsNumber: true })}
-                    className="h-9 rounded-md border border-white/20 bg-brand-cream px-1.5 text-xs text-brand-bg focus:outline-none focus:ring-1 focus:ring-brand-pink"
-                  >
-                    {MINUTES.map((m) => (
-                      <option key={m} value={m}>{String(m).padStart(2, '0')}m</option>
-                    ))}
-                  </select>
+                    <X className="w-4 h-4" />
+                  </button>
                 </div>
-
-                {/* Remove */}
-                <button
-                  type="button"
-                  onClick={() => remove(index)}
-                  className="p-1.5 rounded hover:bg-white/10 text-white/40 hover:text-white transition-colors"
-                >
-                  <X className="w-4 h-4" />
-                </button>
+                {/* Row 2: start time + duration */}
+                <div className="flex gap-2 items-center">
+                  <input
+                    type="time"
+                    {...register(`prepBlocks.${index}.startTime`)}
+                    className="h-9 w-28 rounded-md border border-white/20 bg-brand-cream px-2 text-xs text-brand-bg focus:outline-none focus:ring-1 focus:ring-brand-pink"
+                  />
+                  <div className="flex items-center gap-1">
+                    <select
+                      {...register(`prepBlocks.${index}.durationHours`, { valueAsNumber: true })}
+                      className="h-9 rounded-md border border-white/20 bg-brand-cream px-1.5 text-xs text-brand-bg focus:outline-none focus:ring-1 focus:ring-brand-pink"
+                    >
+                      {HOURS.map((h) => (
+                        <option key={h} value={h}>{h}h</option>
+                      ))}
+                    </select>
+                    <select
+                      {...register(`prepBlocks.${index}.durationMinutes`, { valueAsNumber: true })}
+                      className="h-9 rounded-md border border-white/20 bg-brand-cream px-1.5 text-xs text-brand-bg focus:outline-none focus:ring-1 focus:ring-brand-pink"
+                    >
+                      {MINUTES.map((m) => (
+                        <option key={m} value={m}>{String(m).padStart(2, '0')}m</option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
               </div>
             </div>
           ))}

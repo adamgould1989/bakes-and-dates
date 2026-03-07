@@ -6,6 +6,7 @@ import { X, Trash2, ExternalLink, Clock, Calendar } from 'lucide-react'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
+import { ConfirmDialog } from '@/components/ui/confirm-dialog'
 import { deleteCalendarEvent } from '@/actions/calendar'
 import { formatDateTime } from '@/lib/utils/dates'
 import { EVENT_COLORS } from '@/lib/utils/calendar'
@@ -25,13 +26,13 @@ const eventTypeLabels: Record<string, string> = {
 
 export function EventPopover({ event, onClose }: EventPopoverProps) {
   const [deleting, setDeleting] = useState(false)
+  const [confirmOpen, setConfirmOpen] = useState(false)
 
   if (!event) return null
 
   const colors = EVENT_COLORS[event.extendedProps.eventType]
 
-  async function handleDelete() {
-    if (!confirm('Delete this event?')) return
+  async function executeDelete() {
     setDeleting(true)
     const result = await deleteCalendarEvent(event!.id)
     if (result.success) {
@@ -59,8 +60,8 @@ export function EventPopover({ event, onClose }: EventPopoverProps) {
             </Badge>
             <h3 className="font-semibold text-white text-base leading-tight">{event.title}</h3>
           </div>
-          <button onClick={onClose} className="text-white/50 hover:text-white">
-            <X className="w-5 h-5" />
+          <button onClick={onClose} aria-label="Close" className="text-white/50 hover:text-white">
+            <X className="w-5 h-5" aria-hidden="true" />
           </button>
         </div>
 
@@ -96,7 +97,7 @@ export function EventPopover({ event, onClose }: EventPopoverProps) {
           <Button
             variant="destructive"
             size="sm"
-            onClick={handleDelete}
+            onClick={() => setConfirmOpen(true)}
             disabled={deleting}
             className={event.extendedProps.orderId ? '' : 'flex-1'}
           >
@@ -105,6 +106,13 @@ export function EventPopover({ event, onClose }: EventPopoverProps) {
           </Button>
         </div>
       </div>
+      <ConfirmDialog
+        open={confirmOpen}
+        onOpenChange={setConfirmOpen}
+        title="Delete event?"
+        description="This will permanently remove this calendar event."
+        onConfirm={executeDelete}
+      />
     </div>
   )
 }

@@ -7,6 +7,7 @@ import { toast } from 'sonner'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import { ConfirmDialog } from '@/components/ui/confirm-dialog'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -24,9 +25,9 @@ interface MenuItemCardProps {
 
 export function MenuItemCard({ item }: MenuItemCardProps) {
   const [deleting, setDeleting] = useState(false)
+  const [confirmOpen, setConfirmOpen] = useState(false)
 
-  async function handleDelete() {
-    if (!confirm(`Delete "${item.name}"?`)) return
+  async function executeDelete() {
     setDeleting(true)
     const result = await deleteMenuItem(item.id)
     if (result.success) {
@@ -87,7 +88,7 @@ export function MenuItemCard({ item }: MenuItemCardProps) {
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem
-                onClick={handleDelete}
+                onClick={() => setConfirmOpen(true)}
                 disabled={deleting}
                 className="text-red-400 focus:text-red-400"
               >
@@ -98,6 +99,13 @@ export function MenuItemCard({ item }: MenuItemCardProps) {
           </DropdownMenu>
         </div>
       </CardContent>
+      <ConfirmDialog
+        open={confirmOpen}
+        onOpenChange={setConfirmOpen}
+        title={`Delete "${item.name}"?`}
+        description="This will permanently remove this menu item."
+        onConfirm={executeDelete}
+      />
     </Card>
   )
 }

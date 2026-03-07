@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
 import { Trash2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { ConfirmDialog } from '@/components/ui/confirm-dialog'
 import { deleteOrder } from '@/actions/orders'
 
 interface DeleteOrderButtonProps {
@@ -13,10 +14,10 @@ interface DeleteOrderButtonProps {
 
 export function DeleteOrderButton({ orderId }: DeleteOrderButtonProps) {
   const [deleting, setDeleting] = useState(false)
+  const [confirmOpen, setConfirmOpen] = useState(false)
   const router = useRouter()
 
-  async function handleDelete() {
-    if (!confirm('Delete this order and all its calendar events? This cannot be undone.')) return
+  async function executeDelete() {
     setDeleting(true)
     const result = await deleteOrder(orderId)
     if (result.success) {
@@ -29,9 +30,18 @@ export function DeleteOrderButton({ orderId }: DeleteOrderButtonProps) {
   }
 
   return (
-    <Button variant="destructive" size="sm" onClick={handleDelete} disabled={deleting}>
-      <Trash2 className="w-4 h-4 mr-1" />
-      {deleting ? 'Deleting…' : 'Delete Order'}
-    </Button>
+    <>
+      <Button variant="destructive" size="sm" onClick={() => setConfirmOpen(true)} disabled={deleting}>
+        <Trash2 className="w-4 h-4 mr-1" />
+        {deleting ? 'Deleting…' : 'Delete Order'}
+      </Button>
+      <ConfirmDialog
+        open={confirmOpen}
+        onOpenChange={setConfirmOpen}
+        title="Delete order?"
+        description="This will permanently delete this order and all its calendar events. This cannot be undone."
+        onConfirm={executeDelete}
+      />
+    </>
   )
 }

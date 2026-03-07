@@ -20,18 +20,9 @@ const CalendarClient = dynamic(
 )
 
 export default async function CalendarPage() {
-  // Fetch events spanning 1 month back and 3 months forward
-  const now = new Date()
-  const from = new Date(now)
-  from.setMonth(from.getMonth() - 1)
-  const to = new Date(now)
-  to.setMonth(to.getMonth() + 3)
-
   const { data } = await db()
     .from('calendar_events')
     .select('*')
-    .gte('start_time', from.toISOString())
-    .lte('start_time', to.toISOString())
     .order('start_time', { ascending: true })
 
   const calendarEvents = ((data ?? []) as CalendarEvent[]).map(toFullCalendarEvent)

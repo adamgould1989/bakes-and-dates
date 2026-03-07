@@ -52,21 +52,23 @@ export function OrderItemRow({ index, menuItems, onRemove }: OrderItemRowProps) 
 
       <div className="grid grid-cols-2 gap-3">
         <div className="space-y-1">
-          <label className="text-xs text-white/50">Quantity</label>
+          <label htmlFor={`item-qty-${index}`} className="text-xs text-white/50">Quantity</label>
           <input
+            id={`item-qty-${index}`}
             type="number"
             min="1"
             {...register(`orderItems.${index}.quantity`, { valueAsNumber: true })}
-            className="h-9 w-full rounded-md border border-white/20 bg-brand-cream px-3 text-sm text-brand-bg focus:outline-none focus:ring-1 focus:ring-brand-pink"
+            className="h-9 w-full rounded-md border border-white/20 bg-brand-cream px-3 text-base text-brand-bg focus:outline-none focus:ring-1 focus:ring-brand-pink"
           />
         </div>
         <div className="space-y-1">
-          <label className="text-xs text-white/50">Batches</label>
+          <label htmlFor={`item-batches-${index}`} className="text-xs text-white/50">Batches</label>
           <input
+            id={`item-batches-${index}`}
             type="number"
             min="1"
             {...register(`orderItems.${index}.batches`, { valueAsNumber: true })}
-            className="h-9 w-full rounded-md border border-white/20 bg-brand-cream px-3 text-sm text-brand-bg focus:outline-none focus:ring-1 focus:ring-brand-pink"
+            className="h-9 w-full rounded-md border border-white/20 bg-brand-cream px-3 text-base text-brand-bg focus:outline-none focus:ring-1 focus:ring-brand-pink"
           />
         </div>
       </div>
@@ -79,11 +81,12 @@ export function OrderItemRow({ index, menuItems, onRemove }: OrderItemRowProps) 
       )}
 
       <div>
-        <label className="text-xs text-white/50">Notes</label>
+        <label htmlFor={`item-notes-${index}`} className="text-xs text-white/50">Notes</label>
         <input
+          id={`item-notes-${index}`}
           {...register(`orderItems.${index}.notes`)}
           placeholder="Special requirements…"
-          className="mt-1 h-9 w-full rounded-md border border-white/20 bg-brand-cream px-3 text-sm text-brand-bg focus:outline-none focus:ring-1 focus:ring-brand-pink placeholder:text-gray-400"
+          className="mt-1 h-9 w-full rounded-md border border-white/20 bg-brand-cream px-3 text-base text-brand-bg focus:outline-none focus:ring-1 focus:ring-brand-pink placeholder:text-gray-400"
         />
       </div>
     </div>

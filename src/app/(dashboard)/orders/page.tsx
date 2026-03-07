@@ -38,7 +38,7 @@ export default async function OrdersPage() {
 
       <div className="p-4 md:p-6">
         <Tabs defaultValue="active">
-          <TabsList className="mb-4">
+          <TabsList className="mb-4 w-full overflow-x-auto justify-start">
             <TabsTrigger value="active">Active ({groups.active.length})</TabsTrigger>
             <TabsTrigger value="all">All ({groups.all.length})</TabsTrigger>
             <TabsTrigger value="completed">Done ({groups.completed.length})</TabsTrigger>

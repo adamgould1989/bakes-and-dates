@@ -34,7 +34,7 @@ export function CustomerOrderHistory({ orders }: CustomerOrderHistoryProps) {
             <CardContent className="p-4 flex items-center gap-3">
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 flex-wrap">
-                  <Badge variant={statusVariants[order.status]}>{order.status}</Badge>
+                  <Badge variant={statusVariants[order.status]}>{order.status.charAt(0).toUpperCase() + order.status.slice(1)}</Badge>
                   <span className="text-white/50 text-xs capitalize">{order.delivery_type}</span>
                 </div>
                 <p className="text-white text-sm mt-1">Deadline: {formatDate(order.deadline)}</p>

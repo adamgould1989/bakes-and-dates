@@ -154,7 +154,7 @@ export function CalendarClient({ events }: CalendarClientProps) {
               <button
                 key={v}
                 onClick={() => changeView(v)}
-                className={`px-3 py-1.5 text-xs font-medium transition-colors ${
+                className={`px-3 py-3 text-xs font-medium transition-colors ${
                   view === v
                     ? 'bg-brand-gold text-brand-bg'
                     : 'text-white/60 hover:text-white hover:bg-white/10'

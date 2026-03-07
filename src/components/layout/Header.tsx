@@ -1,5 +1,3 @@
-import { Cake } from 'lucide-react'
-
 interface HeaderProps {
   title: string
   action?: React.ReactNode
@@ -8,16 +6,8 @@ interface HeaderProps {
 export function Header({ title, action }: HeaderProps) {
   return (
     <header className="flex items-center justify-between px-4 py-4 border-b border-white/10 bg-brand-surface/50 backdrop-blur-sm sticky top-0 z-30">
-      {/* Mobile brand mark */}
-      <div className="md:hidden flex items-center gap-2">
-        <Cake className="w-5 h-5 text-brand-gold" />
-        <span className="font-bold text-brand-gold text-sm">Bakes & Dates</span>
-      </div>
-
-      {/* Desktop title */}
-      <h1 className="hidden md:block text-xl font-bold text-white">{title}</h1>
-
-      {action && <div>{action}</div>}
+      <h1 className="text-base md:text-xl font-bold text-white truncate">{title}</h1>
+      {action && <div className="flex gap-2 items-center shrink-0">{action}</div>}
     </header>
   )
 }
