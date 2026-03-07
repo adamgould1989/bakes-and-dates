@@ -83,7 +83,9 @@ export function PrepTimePlanner({ totalPrepMinutes }: PrepTimePlannerProps) {
       {/* Blocks */}
       {fields.length > 0 && (
         <div className="space-y-2">
-          {fields.map((field, index) => (
+          {fields.map((field, index) => {
+            const dateReg = register(`prepBlocks.${index}.date`)
+            return (
             <div key={field.id} className="bg-white/5 rounded-lg p-3 space-y-2">
               {/* Label */}
               <input
@@ -99,13 +101,20 @@ export function PrepTimePlanner({ totalPrepMinutes }: PrepTimePlannerProps) {
                 <div className="flex gap-2 items-center">
                   <input
                     type="date"
-                    {...register(`prepBlocks.${index}.date`)}
-                    className="h-9 flex-1 rounded-md border border-white/20 bg-brand-cream px-2 text-xs text-brand-bg focus:outline-none focus:ring-1 focus:ring-brand-pink"
+                    {...dateReg}
+                    onChange={(e) => {
+                      dateReg.onChange(e)
+                      if (e.target.value) {
+                        const t = e.target
+                        setTimeout(() => t.blur(), 0)
+                      }
+                    }}
+                    className="h-9 flex-1 min-w-0 rounded-md border border-white/20 bg-brand-cream px-2 text-xs text-brand-bg focus:outline-none focus:ring-1 focus:ring-brand-pink"
                   />
                   <button
                     type="button"
                     onClick={() => remove(index)}
-                    className="p-1.5 rounded hover:bg-white/10 text-white/40 hover:text-white transition-colors shrink-0"
+                    className="min-w-[44px] min-h-[44px] flex items-center justify-center rounded hover:bg-white/10 text-white/40 hover:text-white transition-colors shrink-0"
                   >
                     <X className="w-4 h-4" />
                   </button>
@@ -138,7 +147,8 @@ export function PrepTimePlanner({ totalPrepMinutes }: PrepTimePlannerProps) {
                 </div>
               </div>
             </div>
-          ))}
+            )
+          })}
         </div>
       )}
 

@@ -14,6 +14,7 @@ import {
 } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { DateInput } from '@/components/ui/date-input'
 import { Label } from '@/components/ui/label'
 import { createUnavailabilityBlock } from '@/actions/calendar'
 
@@ -112,15 +113,15 @@ export function UnavailabilityModal({ open, onClose, defaultDate, defaultEndDate
             <Input {...register('title')} placeholder="Unavailable" />
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 min-[360px]:grid-cols-2 gap-3">
             <div className="space-y-1.5">
               <Label>Start date *</Label>
-              <Input type="date" {...register('startDate')} />
+              <DateInput {...register('startDate')} />
               {errors.startDate && <p className="text-red-400 text-xs">{errors.startDate.message}</p>}
             </div>
             <div className="space-y-1.5">
               <Label>End date *</Label>
-              <Input type="date" {...register('endDate')} />
+              <DateInput {...register('endDate')} />
               {errors.endDate && <p className="text-red-400 text-xs">{errors.endDate.message}</p>}
             </div>
           </div>

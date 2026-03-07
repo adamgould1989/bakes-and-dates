@@ -8,6 +8,7 @@ import { toast } from 'sonner'
 import { Plus, ShoppingBag } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { DateInput } from '@/components/ui/date-input'
 import { Textarea } from '@/components/ui/textarea'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
@@ -155,7 +156,7 @@ export function OrderForm({ customers, menuItems, defaultCustomerId }: OrderForm
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="space-y-1.5">
               <Label>Deadline *</Label>
-              <Input type="date" {...register('deadline')} />
+              <DateInput {...register('deadline')} />
               {errors.deadline && <p className="text-red-400 text-xs">{errors.deadline.message}</p>}
             </div>
 

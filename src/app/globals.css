@@ -21,6 +21,22 @@ body {
   font-family: system-ui, -apple-system, sans-serif;
 }
 
+/* Fix iOS Safari: date inputs can overflow their container and render taller than other inputs */
+@layer base {
+  input[type="date"] {
+    min-width: 0;
+    max-width: 100%;
+    height: 2.75rem; /* h-11 — match other Input components */
+    box-sizing: border-box;
+  }
+}
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+}
+
 /* FullCalendar theme overrides */
 .fc {
   --fc-border-color: rgba(255, 255, 255, 0.1);

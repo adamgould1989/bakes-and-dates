@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { DateInput } from '@/components/ui/date-input'
 import { Textarea } from '@/components/ui/textarea'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
@@ -87,8 +88,7 @@ export function EditOrderForm({ order, customers, menuItems }: EditOrderFormProp
 
         <div className="space-y-1.5">
           <Label>Deadline *</Label>
-          <Input
-            type="date"
+          <DateInput
             value={deadline}
             onChange={(e) => setDeadline(e.target.value)}
             required

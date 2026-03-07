@@ -12,6 +12,10 @@ const menuItemSchema = z.object({
   base_prep_time_minutes: z.coerce.number().min(0),
   category: z.string().optional(),
   is_active: z.boolean().default(true),
+  price: z.preprocess(
+    (v) => (v === '' || v === null || v === undefined ? null : Number(v)),
+    z.number().min(0).nullable().optional()
+  ),
 })
 
 export async function createMenuItem(formData: unknown): Promise<ActionResult> {

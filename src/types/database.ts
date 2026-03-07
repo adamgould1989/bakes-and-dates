@@ -18,6 +18,7 @@ export interface Database {
           base_prep_time_minutes: number
           category: string | null
           is_active: boolean
+          price: number | null
         }
         Insert: {
           id?: string
@@ -27,6 +28,7 @@ export interface Database {
           base_prep_time_minutes?: number
           category?: string | null
           is_active?: boolean
+          price?: number | null
         }
         Update: {
           id?: string
@@ -36,6 +38,7 @@ export interface Database {
           base_prep_time_minutes?: number
           category?: string | null
           is_active?: boolean
+          price?: number | null
         }
       }
       customers: {

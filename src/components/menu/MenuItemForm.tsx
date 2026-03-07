@@ -18,6 +18,10 @@ const schema = z.object({
   base_prep_time_minutes: z.coerce.number().min(0).default(0),
   category: z.string().optional(),
   is_active: z.boolean().default(true),
+  price: z.preprocess(
+    (v) => (v === '' || v === null || v === undefined ? null : Number(v)),
+    z.number().min(0).nullable().optional()
+  ),
 })
 
 type FormValues = z.infer<typeof schema>
@@ -43,6 +47,7 @@ export function MenuItemForm({ item, onSuccess }: MenuItemFormProps) {
           base_prep_time_minutes: item.base_prep_time_minutes,
           category: item.category ?? '',
           is_active: item.is_active,
+          price: item.price ?? undefined,
         }
       : { is_active: true, base_prep_time_minutes: 0 },
   })
@@ -90,6 +95,18 @@ export function MenuItemForm({ item, onSuccess }: MenuItemFormProps) {
         {errors.base_prep_time_minutes && (
           <p className="text-red-400 text-xs">{errors.base_prep_time_minutes.message}</p>
         )}
+      </div>
+
+      <div className="space-y-1.5">
+        <Label>Price (£)</Label>
+        <Input
+          type="number"
+          min="0"
+          step="0.01"
+          {...register('price')}
+          placeholder="e.g. 23.99"
+        />
+        {errors.price && <p className="text-red-400 text-xs">{errors.price.message}</p>}
       </div>
 
       <div className="space-y-1.5">

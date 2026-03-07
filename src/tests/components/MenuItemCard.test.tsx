@@ -37,6 +37,7 @@ function makeMenuItem(overrides: Partial<MenuItem> = {}): MenuItem {
     base_prep_time_minutes: 60,
     category: 'Pastry',
     is_active: true,
+    price: null,
     ...overrides,
   }
 }

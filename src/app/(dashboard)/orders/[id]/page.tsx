@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
-import { ChevronLeft, Calendar, Clock, Pencil, CalendarClock } from 'lucide-react'
+import { ChevronLeft, Calendar, Clock, Pencil, CalendarClock, FileText } from 'lucide-react'
 import { db } from '@/lib/supabase/db'
 import { Header } from '@/components/layout/Header'
 import { Button } from '@/components/ui/button'
@@ -45,14 +45,20 @@ export default async function OrderDetailPage({
           <div className="flex gap-2">
             <Link href={`/orders/${params.id}/prep`}>
               <Button variant="outline" size="sm">
-                <CalendarClock className="w-4 h-4 mr-1" />
-                Prep
+                <CalendarClock className="w-4 h-4 sm:mr-1" />
+                <span className="hidden sm:inline">Prep</span>
               </Button>
             </Link>
             <Link href={`/orders/${params.id}/edit`}>
               <Button variant="outline" size="sm">
-                <Pencil className="w-4 h-4 mr-1" />
-                Edit
+                <Pencil className="w-4 h-4 sm:mr-1" />
+                <span className="hidden sm:inline">Edit</span>
+              </Button>
+            </Link>
+            <Link href={`/orders/${params.id}/invoice`}>
+              <Button variant="outline" size="sm">
+                <FileText className="w-4 h-4 sm:mr-1" />
+                <span className="hidden sm:inline">Invoice</span>
               </Button>
             </Link>
           </div>
