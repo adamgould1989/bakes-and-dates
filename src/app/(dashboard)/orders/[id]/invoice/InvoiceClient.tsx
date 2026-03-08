@@ -30,6 +30,15 @@ function fmt(n: number) {
   return `£${Math.abs(n).toFixed(2)}`
 }
 
+function InvoicePhoto({ src }: { src: string }) {
+  const [failed, setFailed] = useState(false)
+  return failed ? (
+    <div className="invoice-img-placeholder">🎂</div>
+  ) : (
+    <img src={src} alt="" className="invoice-img-circle" onError={() => setFailed(true)} />
+  )
+}
+
 export function InvoiceClient({ order, invoiceNumber }: InvoiceClientProps) {
   const [itemPrices, setItemPrices] = useState<Record<string, string>>(() =>
     Object.fromEntries(
@@ -40,7 +49,12 @@ export function InvoiceClient({ order, invoiceNumber }: InvoiceClientProps) {
     )
   )
   const [adjustments, setAdjustments] = useState<Adjustment[]>([])
-  const [headerImages, setHeaderImages] = useState(['', '', ''])
+
+  const HEADER_IMAGES = [
+    '/invoice-images/photo-1.jpg',
+    '/invoice-images/photo-2.jpg',
+    '/invoice-images/photo-3.jpg',
+  ]
 
   const invoiceDate = new Date().toLocaleDateString('en-GB', {
     day: '2-digit',
@@ -97,25 +111,6 @@ export function InvoiceClient({ order, invoiceNumber }: InvoiceClientProps) {
       {/* ── Configuration panel (hidden on print) ── */}
       <div className="no-print p-4 md:p-6 max-w-2xl mx-auto space-y-6">
         <h2 className="text-white font-semibold text-lg">Configure Invoice</h2>
-
-        {/* Header photos */}
-        <div className="space-y-3">
-          <p className="text-white/50 text-xs uppercase tracking-wider font-semibold">Header Photos (optional)</p>
-          <p className="text-white/30 text-xs">Paste a URL for each photo that appears in the invoice header.</p>
-          {headerImages.map((url, i) => (
-            <div key={i} className="flex items-center gap-3">
-              <Label className="w-16 text-white text-sm shrink-0">Photo {i + 1}</Label>
-              <Input
-                placeholder="https://…"
-                value={url}
-                onChange={(e) =>
-                  setHeaderImages((prev) => prev.map((u, j) => (j === i ? e.target.value : u)))
-                }
-                className="h-9 text-sm"
-              />
-            </div>
-          ))}
-        </div>
 
         {/* Item prices */}
         <div className="space-y-3">
@@ -421,15 +416,11 @@ export function InvoiceClient({ order, invoiceNumber }: InvoiceClientProps) {
 
         <div className="invoice-title">LaLa&apos;s Bakes &amp; Cakes</div>
 
-        {/* Header photos — always shown; placeholder circles when no URL provided */}
+        {/* Header photos — falls back to a placeholder circle until images are added */}
         <div className="invoice-images">
-          {headerImages.map((url, i) =>
-            url ? (
-              <img key={i} src={url} alt="" className="invoice-img-circle" />
-            ) : (
-              <div key={i} className="invoice-img-placeholder">🎂</div>
-            )
-          )}
+          {HEADER_IMAGES.map((src, i) => (
+            <InvoicePhoto key={i} src={src} />
+          ))}
         </div>
 
         <div className="invoice-meta">
