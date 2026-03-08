@@ -223,7 +223,12 @@ export function InvoiceClient({ order, invoiceNumber }: InvoiceClientProps) {
                       </button>
                     </div>
                   )}
-                  <div className="flex items-center gap-1 w-24">
+                  <div className="relative w-24">
+                    {!isPercent && (
+                      <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-white/60 text-sm pointer-events-none select-none" aria-hidden="true">
+                        £
+                      </span>
+                    )}
                     <Input
                       type="number"
                       min="0"
@@ -232,11 +237,13 @@ export function InvoiceClient({ order, invoiceNumber }: InvoiceClientProps) {
                       placeholder={isPercent ? '0' : '0.00'}
                       value={adj.amount}
                       onChange={(e) => updateAdjustment(adj.id, 'amount', e.target.value)}
-                      className="h-9 text-sm"
+                      className={`h-9 text-sm ${!isPercent ? 'pl-6' : 'pr-7'}`}
                     />
-                    <span className="text-white/60 text-sm shrink-0" aria-hidden="true">
-                      {isPercent ? '%' : '£'}
-                    </span>
+                    {isPercent && (
+                      <span className="absolute right-2.5 top-1/2 -translate-y-1/2 text-white/60 text-sm pointer-events-none select-none" aria-hidden="true">
+                        %
+                      </span>
+                    )}
                   </div>
                 </div>
               </div>
